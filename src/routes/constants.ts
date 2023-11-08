@@ -1,0 +1,1 @@
+export const MAIL_USER_REGISTERED = "/mails/register"
