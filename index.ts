@@ -1,9 +1,6 @@
 import express from "express"
 import cors from "cors"
-import { router } from "./routes/mails.routes"
-import dotenv from "dotenv"
-
-dotenv.config()
+import { router } from "./src/routes/mails.routes"
 
 const app = express()
 

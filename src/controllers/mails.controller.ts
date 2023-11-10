@@ -1,14 +1,25 @@
+import { ETemplate } from "../interfaces/mail.interface"
 import { sendMail } from "../mails/mail.manager"
+import { errorMiddleware } from "./error.controller"
 
-export const userRegistered = async (req, res, next) => {
-    const { name, email } = req.body
+export const templateExists = (template: ETemplate): boolean => {
+    if (template !== ETemplate.USER_REGISTER 
+    && template !== ETemplate.LOST_PASSWORD) {
+        return false
+    }
+    return true
+}
+
+export const mailController = async (req, res, next) => {
+    const { name, email, template } = req.body
+
     try {
-        console.log(name, email)
-        if (!name || !email) {
-            throw new Error('400: Bad request')
+        if (!name || !email || !template || !templateExists(template)) {
+            errorMiddleware(400, 'Bad request', res)
         }
-        sendMail(name, email)
-        res.send('User registered')
+
+        await sendMail({ name: name, email: email, template: template })
+        res.status(200).send({ message: 'Mail sent' })
     } catch (err) {
         next(err)
     }
